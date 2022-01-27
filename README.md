@@ -35,11 +35,7 @@ brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf pkg-config
 * Install pygame. Needs some architecture magic on macOS Monterey 12.1 on an Intel MacBook Pro.
 
 ```
-export CC=/usr/bin/gcc
-export CFLAGS='-arch i386 -arch x86_64'
-export LDFLAGS='-arch i386 -arch x86_64'
-export ARCHFLAGS='-arch i386 -arch x86_64'
-python3 -m pip install -U pygame --user
+CC=/usr/bin/gcc CFLAGS='-arch i386 -arch x86_64' LDFLAGS='-arch i386 -arch x86_64' ARCHFLAGS='-arch i386 -arch x86_64' python3 -m pip install -U pygame --user
 ```
 
 ## Running Mac software
