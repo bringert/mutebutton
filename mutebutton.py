@@ -14,6 +14,8 @@ running = True
 
 pygame.init()
 
+clock = pygame.time.Clock()
+
 joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 for joy in joysticks:
   joy.init()
@@ -25,5 +27,6 @@ while running:
       running = False
     elif event.type == pygame.JOYBUTTONDOWN:
       button_pressed(event.button)
+  clock.tick(20)
 
 pygame.joystick.quit()
