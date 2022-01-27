@@ -47,3 +47,24 @@ python3 -m pip install -U pygame --user
 ```
 python3 mutebutton.py
 ```
+
+
+## Building stand-alone Mac app
+
+* Install py2app
+
+```
+pip3 install -U py2app --user
+```
+
+* Build app (builds in alias mode)
+
+```
+python3 setup.py py2app -A
+```
+
+* Run app
+
+* Enable "System Events" access for mutebutton
+
+* Allow Accessibility access for mutebutton
