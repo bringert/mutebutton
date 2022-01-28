@@ -9,7 +9,12 @@ from setuptools import setup
 
 APP = ['status_bar_mutebutton.py']
 DATA_FILES = ['microsoft-teams-mute.applescript']
-OPTIONS = {}
+OPTIONS = {
+    'plist': {
+        'CFBundleShortVersionString': '0.1.0',
+        'LSUIElement': True,
+    },
+}
 
 setup(
     app=APP,
