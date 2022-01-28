@@ -24,6 +24,12 @@ osascript microsoft-teams-mute.applescript
 pip3 install -U hidapi --user
 ```
 
+* Install rumps (needed to make a status bar app)
+
+```
+pip3 install -U rumps --user
+```
+
 ## Running Mac software
 
 ```

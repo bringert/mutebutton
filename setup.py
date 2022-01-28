@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 
-APP = ['mutebutton.py']
+APP = ['status_bar_mutebutton.py']
 DATA_FILES = ['microsoft-teams-mute.applescript']
 OPTIONS = {}
 

@@ -11,13 +11,13 @@ class JoystickButton:
   def __init__(self, vendor_id, product_id, button_pressed):
     self.gamepad = hid.device()
     self.gamepad.open(vendor_id, product_id)
-    self.gamepad.set_nonblocking(True)
+    self.gamepad.set_nonblocking(False)
     self.button_pressed = button_pressed
 
   def check_buttons(self):
+    print("Reading from device...")
     report = self.gamepad.read(64)
     if report:
-      #print(report)
       button1 = (report[1] & 0x02) >> 1
       print("Button 1:", button1)
       if button1:
@@ -38,11 +38,16 @@ class MuteButton:
   def check_buttons(self):
     self.input.check_buttons()
 
-def main():
+def watch_mute_button():
   mute = MuteButton()
   while True:
     mute.check_buttons()
     time.sleep(0.01)
+
+def main():
+  thread = threading.Thread(target=watch_mute_button, daemon=True)
+  thread.start()
+
 
 if __name__ == '__main__':
   main()
