@@ -33,7 +33,7 @@ pip3 install -U rumps --user
 ## Running
 
 ```
-python3 status_bar_mutebutto.py
+python3 Tyst.py
 ```
 
 
@@ -62,9 +62,15 @@ python3 setup.py py2app
 * Run app:
 
 ```
-open dist/status_bar_mutebutton.app
+open dist/Tyst.app
 ```
 
-* Enable "System Events" access for status_bar_mutebutton
+* Run app with console output:
 
-* Allow Accessibility access for status_bar_mutebutton
+```
+dist/Tyst.app/Contents/MacOS/Tyst
+```
+
+* Enable "System Events" access for Tyst
+
+* Allow Accessibility access for Tyst

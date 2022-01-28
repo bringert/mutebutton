@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 
-APP = ['status_bar_mutebutton.py']
+APP = ['Tyst.py']
 DATA_FILES = ['microsoft-teams-mute.applescript']
 OPTIONS = {
     'plist': {
