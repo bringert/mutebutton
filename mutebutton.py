@@ -1,40 +1,48 @@
+import hid
 import os
-import pygame.joystick
+import time
 
+VENDOR_ID = 0x2341
+PRODUCT_ID = 0x8037
 
-MUTE_BUTTON = 1
+BUTTON_MUTE = 1
 
+class JoystickButton:
+  def __init__(self, vendor_id, product_id, button_pressed):
+    self.gamepad = hid.device()
+    self.gamepad.open(vendor_id, product_id)
+    self.gamepad.set_nonblocking(True)
+    self.button_pressed = button_pressed
 
-def button_pressed(button):
-  if button == MUTE_BUTTON:
-    print("Toggling mute in Microsoft Teams")
+  def check_buttons(self):
+    report = self.gamepad.read(64)
+    if report:
+      #print(report)
+      button1 = (report[1] & 0x02) >> 1
+      print("Button 1:", button1)
+      if button1:
+        self.button_pressed(1)
+
+class MuteButton:
+  def __init__(self):
+    self.input = JoystickButton(VENDOR_ID, PRODUCT_ID, self.button_handler)
+
+  def button_handler(self, button):
+    if button == BUTTON_MUTE:
+      self.ms_teams_mute()
+
+  def ms_teams_mute(self):
+    print("Toggling mute in Microsoft Teams...")
     os.system('osascript microsoft-teams-mute.applescript')
 
+  def check_buttons(self):
+    self.input.check_buttons()
 
-class JoystickWatcher:
-  def __init__(self, button_down=None):
-    self.button_down = button_down
-    self.running = True
-    pygame.init()
-    self.clock = pygame.time.Clock()
-
-    self.joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
-    for joy in self.joysticks:
-      joy.init()
-
-  def handle_joystick_events(self):
-    for event in pygame.event.get():
-      if event.type == pygame.QUIT:
-        print("Quitting...")
-        self.running = False
-      elif event.type == pygame.JOYBUTTONDOWN:
-        if self.button_down:
-          self.button_down(event.button)
-
-  def run(self):
-    while self.running:
-      self.handle_joystick_events()
-      self.clock.tick(20)
+def main():
+  mute = MuteButton()
+  while True:
+    mute.check_buttons()
+    time.sleep(0.01)
 
 if __name__ == '__main__':
-  JoystickWatcher(button_down=button_pressed).run()
+  main()

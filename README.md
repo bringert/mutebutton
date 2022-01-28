@@ -18,24 +18,10 @@
 osascript microsoft-teams-mute.applescript
 ```
 
-* [Install Homebrew](https://brew.sh/)
-
-* Fix permissions on /usr/local (seems stupid)
+* Install hidapi
 
 ```
-sudo chown -R $(whoami) $(brew --prefix)/*
-```
-
-* Install dependencies
-
-```
-brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf pkg-config
-```
-
-* Install pygame. Needs some architecture magic on macOS Monterey 12.1 on an Intel MacBook Pro.
-
-```
-CC=/usr/bin/gcc CFLAGS='-arch i386 -arch x86_64' LDFLAGS='-arch i386 -arch x86_64' ARCHFLAGS='-arch i386 -arch x86_64' python3 -m pip install -U pygame --user
+pip3 install -U hidapi --user
 ```
 
 ## Running Mac software
