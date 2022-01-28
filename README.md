@@ -30,14 +30,14 @@ pip3 install -U hidapi --user
 pip3 install -U rumps --user
 ```
 
-## Running Mac software
+## Running
 
 ```
-python3 mutebutton.py
+python3 status_bar_mutebutto.py
 ```
 
 
-## Building stand-alone Mac app
+## Building as a Mac app
 
 * Install py2app
 
@@ -45,14 +45,26 @@ python3 mutebutton.py
 pip3 install -U py2app --user
 ```
 
-* Build app (builds in alias mode)
+* Build app (in development/alias mode)
 
 ```
 python3 setup.py py2app -A
 ```
 
-* Run app
+* Build app (in standalone mode)
 
-* Enable "System Events" access for mutebutton
+```
+python3 setup.py py2app
+```
 
-* Allow Accessibility access for mutebutton
+## Running as a mac app
+
+* Run app:
+
+```
+open dist/status_bar_mutebutton.app
+```
+
+* Enable "System Events" access for status_bar_mutebutton
+
+* Allow Accessibility access for status_bar_mutebutton
