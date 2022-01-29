@@ -14,5 +14,7 @@ Simple USB HID gamepad device that uses a single momentary pushbutton
 * Copy code to device:
 
 ```
-cp boot.py code.py hid_gamepad.py ls /Volumes/CIRCUITPY/
+cp boot.py code.py hid_gamepad.py /Volumes/CIRCUITPY/
 ```
+
+* Reset device to pick up new boot.py
