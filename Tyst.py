@@ -4,9 +4,6 @@ import rumps
 import threading
 import time
 
-VENDOR_ID = 0x2341
-PRODUCT_ID = 0x8037
-
 BUTTON_MUTE = 1
 
 # U+1F92B Shushing face / Face with Finger Covering Closed Lips
@@ -16,11 +13,24 @@ class MuteButtonApp(object):
   def __init__(self):
     self.app = rumps.App("Mute test", STATUS_BAR_EMOJI)
 
-  def watch_mute_button(self):
-    device = JoystickButton(VENDOR_ID, PRODUCT_ID, self.button_handler)
+  def find_joysticks_and_gamepads(self):
+    joysticks = []
+    for device in hid.enumerate():
+      usage_page = device['usage_page']
+      usage = device['usage']
+      if usage_page == 0x01 and (usage == 0x04 or usage == 0x05):
+        joysticks.append(device)
+    return joysticks
+
+  def watch_mute_buttons(self):
+    for joystick in self.find_joysticks_and_gamepads():
+      thread = threading.Thread(target=self.watch_mute_button, args=(joystick,), daemon=True)
+      thread.start()
+
+  def watch_mute_button(self, joystick):
+    device = JoystickButton(joystick, self.button_handler)
     while True:
       device.check_buttons()
-      time.sleep(0.01)
 
   def button_handler(self, button):
     if button == BUTTON_MUTE:
@@ -31,24 +41,27 @@ class MuteButtonApp(object):
     os.system('osascript microsoft-teams-mute.applescript')
 
   def run(self):
-    thread = threading.Thread(target=self.watch_mute_button, daemon=True)
-    thread.start()
+    self.watch_mute_buttons()
     self.app.run()
 
 class JoystickButton:
-  def __init__(self, vendor_id, product_id, button_pressed):
+  def __init__(self, device_dict, button_pressed):
+    self.vendor_id = device_dict['vendor_id']
+    self.product_id = device_dict['product_id']
     self.gamepad = hid.device()
-    self.gamepad.open(vendor_id, product_id)
+    self.gamepad.open(self.vendor_id, self.product_id)
     self.gamepad.set_nonblocking(False)
     self.button_pressed = button_pressed
 
   def check_buttons(self):
-    print("Reading from device...")
+    print(f"Reading from device 0x{self.vendor_id:04x}:0x{self.product_id:04x}...")
     report = self.gamepad.read(64)
+    #print(report)
     if report:
+      # TODO: read all the buttons
       button1 = (report[1] & 0x02) >> 1
-      print("Button 1:", button1)
       if button1:
+        print(f"Device 0x{self.vendor_id:04x}:0x{self.product_id:04x}: button 1 pressed")
         self.button_pressed(1)
 
 if __name__ == '__main__':
