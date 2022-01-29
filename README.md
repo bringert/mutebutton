@@ -2,13 +2,13 @@
 
 ## Hardware
 
-* Arduino Pro Micro
+Any USB HID joystick or gamepad should be supported.
 
-* Momentary push button
+To build your own with an Arduino Micro or other 32u4 device, see
+[joyhandbrake](https://github.com/bringert/joyhandbrake).
 
-## Firmware
-
-[joyhandbrake](https://github.com/bringert/joyhandbrake)
+To build your own with a Raspberry Pi Pico, or other RP2040 device, see
+[hardware-2040](hardware-2040).
 
 ## Mac software dependencies
 
