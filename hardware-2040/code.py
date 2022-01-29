@@ -15,12 +15,17 @@ button = digitalio.DigitalInOut(button_pin)
 button.direction = digitalio.Direction.INPUT
 button.pull = digitalio.Pull.UP
 
+led = digitalio.DigitalInOut(board.LED)
+led.direction = digitalio.Direction.OUTPUT
+
 print("Started")
 
 while True:
     if not button.value:
         gp.press_buttons(gamepad_button_num)
+        led.value = True
         print("Pressed")
     else:
         gp.release_buttons(gamepad_button_num)
+        led.value = False
     time.sleep(0.1)
