@@ -1,3 +1,7 @@
+* Look at thread safety
+
+* Handle hot plugging and unplugging devices
+
 * Run on Mac start-up, with a menu item to enable/disable
 
 * Add menu item for toggling mute
