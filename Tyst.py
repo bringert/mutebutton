@@ -1,6 +1,5 @@
 import gamepad
 
-import hid
 import os
 import rumps
 import threading
@@ -19,6 +18,7 @@ class MuteButtonApp(object):
 
   def button_handler(self, button):
     if button == BUTTON_MUTE:
+      print(f"Button {button} pressed")
       self.ms_teams_mute()
 
   def ms_teams_mute(self):

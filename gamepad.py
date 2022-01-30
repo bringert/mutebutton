@@ -1,5 +1,10 @@
 import hid
 
+DEBUG = True
+
+# TODO: This should be read from the HID report descriptor
+NUM_BUTTONS = 16
+
 def find_joysticks_and_gamepads():
   devices = []
   for device in hid.enumerate():
@@ -22,14 +27,30 @@ class Gamepad:
     self.gamepad.open(self.vendor_id, self.product_id)
     self.gamepad.set_nonblocking(False)
     self.button_pressed = button_pressed
+    self.button_state = [False] * NUM_BUTTONS
+
+  def close():
+    self.gamepad.close()
+
+  def get_button_state(self, buttons_bitmap, button_index):
+    byte_index = button_index // 8
+    bit_index = button_index % 8
+    return bool((buttons_bitmap[byte_index] >> bit_index) & 0x1)
 
   def check_buttons(self):
-    print(f"Reading from device 0x{self.vendor_id:04x}:0x{self.product_id:04x}...")
+#    if DEBUG:
+#      print(f"Reading from device 0x{self.vendor_id:04x}:0x{self.product_id:04x}...")
     report = self.gamepad.read(64)
-    #print(report)
+    if DEBUG:
+      print(f"From device 0x{self.vendor_id:04x}:0x{self.product_id:04x}: {report}")
     if report:
-      # TODO: read all the buttons
-      button1 = (report[1] & 0x02) >> 1
-      if button1:
-        print(f"Device 0x{self.vendor_id:04x}:0x{self.product_id:04x}: button 1 pressed")
-        self.button_pressed(1)
+      # The first byte is the report ID
+      # After that, the button values are packed into bytes
+      # TODO: need to ignore non-button reports
+      buttons_bitmap = report[1:(1 + NUM_BUTTONS//8)]
+      for button in range(0, NUM_BUTTONS):
+        new_value = self.get_button_state(buttons_bitmap, button)
+        if new_value != self.button_state[button]:
+          self.button_state[button] = new_value
+          if new_value:
+            self.button_pressed(button)
