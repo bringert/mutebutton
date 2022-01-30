@@ -10,6 +10,7 @@ from setuptools import setup
 APP = ['Tyst.py']
 DATA_FILES = ['microsoft-teams-mute.applescript']
 OPTIONS = {
+    'iconfile':'icon.icns',
     'plist': {
         'CFBundleShortVersionString': '0.1.0',
         'LSUIElement': True,

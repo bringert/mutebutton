@@ -6,12 +6,9 @@ import time
 
 BUTTON_MUTE = 1
 
-# U+1F92B Shushing face / Face with Finger Covering Closed Lips
-STATUS_BAR_EMOJI = "\U0001F92B"
-
 class MuteButtonApp(object):
   def __init__(self):
-    self.app = rumps.App("Mute test", STATUS_BAR_EMOJI)
+    self.app = rumps.App("Mute test", icon="icon.icns")
 
   def find_joysticks_and_gamepads(self):
     joysticks = []
