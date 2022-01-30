@@ -60,18 +60,22 @@ class Gamepad:
     while self.running:
       # if DEBUG:
       #   print(f"Reading from device 0x{self.vendor_id:04x}:0x{self.product_id:04x}...")
-      report = self.gamepad.read(64)
-      if DEBUG:
-        print(f"From device 0x{self.vendor_id:04x}:0x{self.product_id:04x}: {report}")
+      report = self.gamepad.read(64, timeout_ms=1000)
       if report:
+        if DEBUG:
+          print(f"From device 0x{self.vendor_id:04x}:0x{self.product_id:04x}: {report}")
         self.handle_report(report)
     self.gamepad.close()
 
 
 
-
 if __name__ == '__main__':
+  gamepads = []
   for device in find_joysticks_and_gamepads():
-    Gamepad(device, lambda button: print(f"Button {button} pressed")).start()
-  while True:
-    time.sleep(0.1)
+    gamepad = Gamepad(device, lambda button: print(f"Button {button} pressed"))
+    gamepad.start()
+    gamepads.append(gamepad)
+  time.sleep(4)
+  for gamepad in gamepads:
+    print(f"Closing 0x{gamepad.vendor_id:04x}:0x{gamepad.product_id:04x}...")
+    gamepad.close()
