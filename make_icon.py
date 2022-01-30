@@ -1,5 +1,7 @@
 # Dependencies:
 # pip3 install -U requests --user
+# pip3 install -U Pillow --user
+# pip3 install -U icnsutil --user
 
 # Gets emojis from https://emojiapi.dev/
 # E.g. https://emojiapi.dev/api/v1/shushing_face/512.png
