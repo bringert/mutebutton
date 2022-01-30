@@ -35,7 +35,10 @@ class MuteButtonApp(object):
 
   def ms_teams_mute(self):
     print("Toggling mute in Microsoft Teams...")
-    os.system('osascript microsoft-teams-mute.applescript')
+    start_time = time.time()
+    os.system('osascript microsoft-teams-mute.scpt')
+    elapsed_time_ms = int(1000 * (time.time() - start_time))
+    print(f"Muting mic took {elapsed_time_ms} ms")
 
   def run(self):
     self.watch_mute_buttons()

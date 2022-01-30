@@ -30,6 +30,15 @@ pip3 install -U hidapi --user
 pip3 install -U rumps --user
 ```
 
+## Recompiling applescript
+
+* We're using a compiled AppleScript file to reduce run-time latency.
+  After modifying the script, it needs to be compiled:
+
+```
+osacompile -x -o microsoft-teams-mute.scpt microsoft-teams-mute.applescript
+```
+
 ## Running
 
 ```
