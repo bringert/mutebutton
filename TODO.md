@@ -1,4 +1,4 @@
-* Look at thread safety
+* Add UI for selecting which device to use
 
 * Handle hot plugging and unplugging devices
 
