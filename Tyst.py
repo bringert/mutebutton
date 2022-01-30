@@ -2,7 +2,6 @@ import actions
 import gamepad
 
 import rumps
-import threading
 
 BUTTON_MUTE = 1
 
@@ -12,8 +11,7 @@ class MuteButtonApp(object):
 
   def watch_mute_buttons(self):
     for device in gamepad.find_joysticks_and_gamepads():
-      thread = threading.Thread(target=gamepad.watch_mute_button, args=(device, self.button_handler), daemon=True)
-      thread.start()
+      gamepad.Gamepad(device, self.button_handler).start()
 
   def button_handler(self, button):
     if button == BUTTON_MUTE:
