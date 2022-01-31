@@ -4,6 +4,7 @@
 
 import usb1
 import threading
+import time
 
 class HotplugDeviceManager:
   # If arrived_callback returns None,
@@ -18,6 +19,10 @@ class HotplugDeviceManager:
     self.running = True
     self.thread = threading.Thread(target=self.run, daemon=False)
     self.thread.start()
+
+  def close(self):
+    self.running = False
+    self.thread.join()
 
   def hotplug_callback(self, context, device, event):
     vendor_id = device.getVendorID()
@@ -52,7 +57,8 @@ class HotplugDeviceManager:
           dev_class=usb1.HOTPLUG_MATCH_ANY)
       print('Callback registered. Monitoring events')
       while self.running:
-        context.handleEvents()
+        context.handleEventsTimeout(tv=1)
+      print("HotplugDeviceManager thread exiting")
 
 class HotplugDeviceHandle(object):
   def __init__(self, device):
@@ -72,7 +78,15 @@ if __name__ == '__main__':
     print(f"Device arrived: 0x{handle.vendor_id:04x}:0x{handle.product_id:04x}")
   def left_callback(handle):
     print(f"Device left: 0x{handle.vendor_id:04x}:0x{handle.product_id:04x}")
-  HotplugDeviceManager(arrived_callback, left_callback).start()
+
+  devmgr = HotplugDeviceManager(arrived_callback, left_callback)
+  try:
+    devmgr.start()
+    while True:
+      time.sleep(1)
+  except KeyboardInterrupt:
+    print("Exiting")
+    devmgr.close()
 
 
 # Output on start:
