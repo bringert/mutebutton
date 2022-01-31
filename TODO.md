@@ -1,8 +1,5 @@
 * Add UI for selecting which device to use
 
-* Handle hot plugging and unplugging devices
-  Maybe use https://github.com/vpelletier/python-libusb1/blob/master/examples/hotplug.py
-
 * Run on Mac start-up, with a menu item to enable/disable
 
 * Add menu item for toggling mute

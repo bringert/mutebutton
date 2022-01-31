@@ -1,39 +1,67 @@
+import device_manager
+
 import hid
+import logging
+from logging import debug
 import threading
 import time
-
-DEBUG = True
 
 # TODO: This should be read from the HID report descriptor
 NUM_BUTTONS = 16
 
-def find_joysticks_and_gamepads():
-  devices = []
-  for device in hid.enumerate():
-    usage_page = device['usage_page']
-    usage = device['usage']
-    if usage_page == 0x01 and (usage == 0x04 or usage == 0x05):
-      devices.append(device)
-  return devices
+class GamepadManager:
+  def __init__(self, button_handler):
+    self.button_handler = button_handler
+    self.devmgr = device_manager.HotplugDeviceManager(self.added_callback, self.removed_callback)
+    self.devmgr.start()
+
+  def close(self):
+    self.devmgr.close()
+
+  def is_gamepad(self, vendor_id, product_id):
+    # hid.enumerate() returns multiple entries for a single device
+    for device in hid.enumerate(vendor_id=vendor_id, product_id=product_id):
+      usage_page = device['usage_page']
+      usage = device['usage']
+      if usage_page == 0x01 and (usage == 0x04 or usage == 0x05):
+        return True
+    return False
+
+  def added_callback(self, device):
+    vendor_id = device.vendor_id
+    product_id = device.product_id
+
+    if self.is_gamepad(vendor_id, product_id):
+      gamepad = Gamepad(vendor_id, product_id, self.button_handler)
+      gamepad.start()
+      device.user_object = gamepad
+
+  def removed_callback(self, device):
+    gamepad = device.user_object
+    if gamepad:
+      gamepad.close()
+
 
 class Gamepad:
-  def __init__(self, device_dict, button_pressed):
-    self.vendor_id = device_dict['vendor_id']
-    self.product_id = device_dict['product_id']
+  def __init__(self, vendor_id, product_id, button_pressed):
+    self.vendor_id = vendor_id
+    self.product_id = product_id
     self.button_pressed = button_pressed
     self.button_state = [False] * NUM_BUTTONS
     self.running = False
+    self.thread = None
 
   def start(self):
-    self.gamepad = hid.device()
-    self.gamepad.open(self.vendor_id, self.product_id)
-    self.gamepad.set_nonblocking(False)
+    self.device = hid.device()
+    self.device.open(self.vendor_id, self.product_id)
+    self.device.set_nonblocking(False)
     self.running = True
-    self.thread = threading.Thread(target=self.run, daemon=False)
+    thread_name = f"{self.vendor_id:04x}:{self.product_id:04x}"
+    self.thread = threading.Thread(target=self.run, name=thread_name, daemon=False)
     self.thread.start()
 
-  # TODO: not yet used
   def close(self):
+    debug("Gamepad.close()")
     self.running = False
     if self.thread:
       self.thread.join()
@@ -45,6 +73,8 @@ class Gamepad:
     return bool((buttons_bitmap[byte_index] >> bit_index) & 0x1)
 
   def handle_report(self, report):
+    debug("Report: %s", report)
+
     # The first byte is the report ID
     # After that, the button values are packed into bytes
     # TODO: need to ignore non-button reports
@@ -57,29 +87,28 @@ class Gamepad:
           self.button_pressed(button)
 
   def run(self):
-    while self.running:
-      # if DEBUG:
-      #   print(f"Reading from device 0x{self.vendor_id:04x}:0x{self.product_id:04x}...")
-      report = self.gamepad.read(64, timeout_ms=1000)
-      if report:
-        if DEBUG:
-          print(f"From device 0x{self.vendor_id:04x}:0x{self.product_id:04x}: {report}")
-        self.handle_report(report)
-    self.gamepad.close()
-
-
+    debug("Thread started")
+    try:
+      while self.running:
+        report = self.device.read(64, timeout_ms=1000)
+        if report:
+          self.handle_report(report)
+    except OSError:
+      debug("Caught OSError")
+    self.device.close()
+    debug("Thread finished")
 
 if __name__ == '__main__':
-  gamepads = []
-  for device in find_joysticks_and_gamepads():
-    gamepad = Gamepad(device, lambda button: print(f"Button {button} pressed"))
-    gamepad.start()
-    gamepads.append(gamepad)
+  logging.basicConfig(level=logging.DEBUG,format="%(levelname)s:%(threadName)s:%(message)s")
+
+  def button_handler(button):
+    debug("button_handler(%d)", button)
+
+  mgr = GamepadManager(button_handler)
   try:
-    time.sleep(4)
+    while True:
+      time.sleep(1)
   except KeyboardInterrupt:
     pass
   print("Exiting...")
-  for gamepad in gamepads:
-    print(f"Closing 0x{gamepad.vendor_id:04x}:0x{gamepad.product_id:04x}...")
-    gamepad.close()
+  mgr.close()
