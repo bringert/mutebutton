@@ -29,7 +29,7 @@ class Gamepad:
     self.gamepad.open(self.vendor_id, self.product_id)
     self.gamepad.set_nonblocking(False)
     self.running = True
-    self.thread = threading.Thread(target=self.run, daemon=True)
+    self.thread = threading.Thread(target=self.run, daemon=False)
     self.thread.start()
 
   # TODO: not yet used
@@ -75,7 +75,11 @@ if __name__ == '__main__':
     gamepad = Gamepad(device, lambda button: print(f"Button {button} pressed"))
     gamepad.start()
     gamepads.append(gamepad)
-  time.sleep(4)
+  try:
+    time.sleep(4)
+  except KeyboardInterrupt:
+    pass
+  print("Exiting...")
   for gamepad in gamepads:
     print(f"Closing 0x{gamepad.vendor_id:04x}:0x{gamepad.product_id:04x}...")
     gamepad.close()
