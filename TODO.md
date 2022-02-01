@@ -2,8 +2,6 @@
 
 * Run on Mac start-up, with a menu item to enable/disable
 
-* Add menu item for toggling mute
-
 * Reduce latency. Try using compiled applescript and
   py-applescript (NSAppleScript wrapper)
 
