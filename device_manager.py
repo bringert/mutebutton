@@ -1,7 +1,3 @@
-# Dependencies:
-# brew install libusb1
-# pip3 install -U libusb1 --user
-
 import logging
 from logging import debug, error
 import usb1

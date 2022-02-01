@@ -18,6 +18,13 @@ To build your own with a Raspberry Pi Pico, or other RP2040 device, see
 osascript microsoft-teams-mute.applescript
 ```
 
+* Install python-libusb1
+
+```
+brew install libusb1
+pip3 install -U libusb1 --user
+```
+
 * Install hidapi
 
 ```
