@@ -15,6 +15,20 @@ class MuteButtonApp(rumps.App):
     self.menu = ["Teams: Mute", "Quit"]
     self.gamepad_mgr = gamepad.GamepadManager(self.button_handler)
 
+    devs_menu = rumps.MenuItem("Devices")
+    self.menu.add(devs_menu)
+#    self.add_dev_menu_item(devs_menu, "Device 1")
+#    self.add_dev_menu_item(devs_menu, "Device 2")
+
+  def add_dev_menu_item(self, parent, name):
+    item = rumps.MenuItem(name)
+    item.set_callback(self.dev_clicked)
+    item.state = 1
+    parent.add(item)
+
+  def dev_clicked(self, item):
+    item.state = 0 if item.state == 1 else 1
+
   @rumps.clicked('Quit')
   def clean_up_before_quit(self, _):
     debug("Quitting")
