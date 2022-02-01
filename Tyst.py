@@ -32,5 +32,6 @@ class MuteButtonApp(rumps.App):
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG,format="%(levelname)s:%(threadName)s:%(message)s")
+  rumps.debug_mode(True)
   app = MuteButtonApp()
   app.run()
