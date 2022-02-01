@@ -12,12 +12,6 @@ To build your own with a Raspberry Pi Pico, or other RP2040 device, see
 
 ## Mac software dependencies
 
-* Test injecting mute events into Teams
-
-```
-osascript microsoft-teams-mute.applescript
-```
-
 * Install python-libusb1
 
 ```
@@ -37,13 +31,10 @@ pip3 install -U hidapi --user
 pip3 install -U rumps --user
 ```
 
-## Recompiling applescript
-
-* We're using a compiled AppleScript file to reduce run-time latency.
-  After modifying the script, it needs to be compiled:
+* Install py-applescript to run the automation script
 
 ```
-osacompile -x -o microsoft-teams-mute.scpt microsoft-teams-mute.applescript
+pip3 install -U py-applescript --user
 ```
 
 ## Running
