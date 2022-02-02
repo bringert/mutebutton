@@ -1,3 +1,5 @@
+* Improve device menu: persist device state, sort menu items alphabetically
+
 * Run on Mac start-up, with a menu item to enable/disable
   https://stackoverflow.com/questions/3358410/programmatically-run-at-startup-on-mac-os-x
 
