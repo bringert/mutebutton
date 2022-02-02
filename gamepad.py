@@ -1,4 +1,4 @@
-import device_manager
+import hotplug
 
 import hid
 import logging
@@ -10,9 +10,12 @@ import time
 NUM_BUTTONS = 16
 
 class GamepadManager:
-  def __init__(self, button_handler):
+  def __init__(self, button_handler, gamepad_added=None, gamepad_removed=None):
     self.button_handler = button_handler
-    self.devmgr = device_manager.HotplugDeviceManager(self.added_callback, self.removed_callback)
+    self.gamepad_added = gamepad_added
+    self.gamepad_removed = gamepad_removed
+    self.devices = {}
+    self.devmgr = hotplug.HotplugDeviceManager(self.added_callback, self.removed_callback)
     self.devmgr.start()
 
   def close(self):
@@ -27,18 +30,30 @@ class GamepadManager:
         return True
     return False
 
-  def added_callback(self, device):
-    vendor_id = device.vendor_id
-    product_id = device.product_id
+  def make_gamepad(self, device):
+    vendor_id = device.getVendorID()
+    product_id = device.getProductID()
 
     if self.is_gamepad(vendor_id, product_id):
+      # TODO: catch any exceptions and return None
       gamepad = Gamepad(vendor_id, product_id, self.button_handler)
       gamepad.start()
-      device.user_object = gamepad
+      return gamepad
+
+    return None
+
+  def added_callback(self, device):
+    gamepad = self.make_gamepad(device)
+    if gamepad:
+      self.devices[device] = gamepad
+      if self.gamepad_added:
+        self.gamepad_added(gamepad)
 
   def removed_callback(self, device):
-    gamepad = device.user_object
+    gamepad = self.devices.pop(device, None)
     if gamepad:
+      if self.gamepad_removed:
+        self.gamepad_removed(gamepad)
       gamepad.close()
 
 

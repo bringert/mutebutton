@@ -3,6 +3,7 @@ import gamepad
 
 import logging
 from logging import debug
+from PyObjCTools import AppHelper
 import rumps
 
 BUTTON_MUTE = 1
@@ -13,18 +14,34 @@ class MuteButtonApp(rumps.App):
     self.icon = "icon.icns"
     self.quit_button = None
     self.menu = ["Teams: Mute", "Quit"]
-    self.gamepad_mgr = gamepad.GamepadManager(self.button_handler)
+    self.gamepad_mgr = gamepad.GamepadManager(self.button_handler,
+        gamepad_added=self.device_added,
+        gamepad_removed=self.device_removed)
 
-    devs_menu = rumps.MenuItem("Devices")
-    self.menu.add(devs_menu)
-#    self.add_dev_menu_item(devs_menu, "Device 1")
-#    self.add_dev_menu_item(devs_menu, "Device 2")
+    self.devs_menu = rumps.MenuItem("Devices")
+    self.menu.add(self.devs_menu)
 
-  def add_dev_menu_item(self, parent, name):
+  def device_added(self, gamepad):
+    AppHelper.callAfter(self.add_dev_menu_item, gamepad)
+
+  def device_removed(self, gamepad):
+    AppHelper.callAfter(self.remove_dev_menu_item, gamepad)
+
+  def add_dev_menu_item(self, gamepad):
+    name = self.get_gamepad_name(gamepad)
+    debug("Adding menu item '%s'", name)
     item = rumps.MenuItem(name)
     item.set_callback(self.dev_clicked)
     item.state = 1
-    parent.add(item)
+    self.devs_menu.add(item)
+
+  def remove_dev_menu_item(self, gamepad):
+    name = self.get_gamepad_name(gamepad)
+    debug("Removing menu item '%s'", name)
+    self.devs_menu.pop(name)
+
+  def get_gamepad_name(self, gamepad):
+    return f"{gamepad.vendor_id:04x}:{gamepad.product_id:04x}"
 
   def dev_clicked(self, item):
     item.state = 0 if item.state == 1 else 1

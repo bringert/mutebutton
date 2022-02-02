@@ -8,8 +8,6 @@ class HotplugDeviceManager:
   def __init__(self, added_callback=None, removed_callback=None):
     self.added_callback = added_callback
     self.removed_callback = removed_callback
-    self.device_handles = {}
-    self.pending_callbacks = []
     self.running = False
     self.thread = None
 
@@ -27,30 +25,12 @@ class HotplugDeviceManager:
 
   def hotplug_callback(self, context, device, event):
     if event == usb1.HOTPLUG_EVENT_DEVICE_ARRIVED:
-      self.handle_added(device)
+      if self.added_callback:
+        self.added_callback(device)
     elif event == usb1.HOTPLUG_EVENT_DEVICE_LEFT:
-      self.handle_removed(device)
+      if self.removed_callback:
+        self.removed_callback(device)
     return False # Stay registered
-
-  def handle_added(self, device):
-    debug("Added %s", device)
-    handle = HotplugDeviceHandle(device)
-    self.device_handles[device] = handle
-    if self.added_callback:
-      self.added_callback(handle)
-
-  def handle_removed(self, device):
-    debug("Removed %s", device)
-    handle = self.device_handles[device]
-    del self.device_handles[device]
-    if self.removed_callback:
-      self.removed_callback(handle)
-
-  def remove_devices(self):
-    debug("Removing all devices")
-    # Use list() since we remove the values from the dict in handle_removed()
-    for device in list(self.device_handles.keys()):
-      self.handle_removed(device)
 
   def run(self):
     with usb1.USBContext() as context:
@@ -69,30 +49,16 @@ class HotplugDeviceManager:
       debug("Callback registered. Monitoring events")
       while self.running:
         context.handleEventsTimeout(tv=1)
-      self.remove_devices()
     debug("HotplugDeviceManager thread exiting")
-
-class HotplugDeviceHandle(object):
-  def __init__(self, device):
-    self.device = device
-    self.user_object = None
-
-  @property
-  def vendor_id(self):
-    return self.device.getVendorID()
-
-  @property
-  def product_id(self):
-    return self.device.getProductID()
 
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG,format="%(levelname)s:%(threadName)s:%(message)s")
 
   def arrived_callback(handle):
-    print(f"added {handle.vendor_id:04x}:{handle.product_id:04x}")
+    print(f"added {handle.getVendorID():04x}:{handle.getProductID():04x}")
   def left_callback(handle):
-    print(f"removed {handle.vendor_id:04x}:{handle.product_id:04x}")
+    print(f"removed {handle.getVendorID():04x}:{handle.getProductID():04x}")
 
   devmgr = HotplugDeviceManager(arrived_callback, left_callback)
   try:
