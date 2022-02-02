@@ -1,5 +1,3 @@
-* Add UI for selecting which device to use
-
 * Run on Mac start-up, with a menu item to enable/disable
   https://stackoverflow.com/questions/3358410/programmatically-run-at-startup-on-mac-os-x
 
