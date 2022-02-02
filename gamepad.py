@@ -2,7 +2,7 @@ import hotplug
 
 import hid
 import logging
-from logging import debug
+from logging import debug, warn
 import threading
 import time
 
@@ -37,7 +37,7 @@ class GamepadManager:
     if self.is_gamepad(vendor_id, product_id):
       # TODO: catch any exceptions and return None
       gamepad = Gamepad(vendor_id, product_id, self.button_handler)
-      gamepad.start()
+      gamepad.open()
       return gamepad
 
     return None
@@ -56,20 +56,26 @@ class GamepadManager:
         self.gamepad_removed(gamepad)
       gamepad.close()
 
-
 class Gamepad:
   def __init__(self, vendor_id, product_id, button_pressed):
     self.vendor_id = vendor_id
     self.product_id = product_id
     self.button_pressed = button_pressed
+    self.reset()
+
+  def reset(self):
     self.button_state = [False] * NUM_BUTTONS
+    self.device = None
     self.running = False
     self.thread = None
+    self.manufacturer_string = None
+    self.product_string = None
 
-  def start(self):
-    self.device = hid.device()
-    self.device.open(self.vendor_id, self.product_id)
-    self.device.set_nonblocking(False)
+  def open(self):
+    debug("Gamepad.open()")
+    if self.running:
+      warn("Gamepad already open")
+      return
     self.running = True
     thread_name = f"{self.vendor_id:04x}:{self.product_id:04x}"
     self.thread = threading.Thread(target=self.run, name=thread_name, daemon=False)
@@ -103,14 +109,20 @@ class Gamepad:
 
   def run(self):
     debug("Thread started")
+    self.device = hid.device()
+    self.device.open(self.vendor_id, self.product_id)
+    self.device.set_nonblocking(False)
+    self.manufacturer_string = self.device.get_manufacturer_string()
+    self.product_string = self.device.get_product_string()
     try:
       while self.running:
         report = self.device.read(64, timeout_ms=1000)
         if report:
           self.handle_report(report)
+      self.device.close()
     except OSError:
       debug("Caught OSError")
-    self.device.close()
+    self.reset()
     debug("Thread finished")
 
 if __name__ == '__main__':

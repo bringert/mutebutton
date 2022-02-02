@@ -28,23 +28,30 @@ class MuteButtonApp(rumps.App):
     AppHelper.callAfter(self.remove_dev_menu_item, gamepad)
 
   def add_dev_menu_item(self, gamepad):
-    name = self.get_gamepad_name(gamepad)
-    debug("Adding menu item '%s'", name)
-    item = rumps.MenuItem(name)
-    item.set_callback(self.dev_clicked)
+    def callback(item):
+      if item.state == 1:
+        item.state = 0
+        gamepad.close()
+      else:
+        item.state = 1
+        gamepad.open()
+
+    key = self.get_gamepad_key(gamepad)
+    debug("Adding menu item '%s'", key)
+    item = rumps.MenuItem(key)
+    item.set_callback(callback)
     item.state = 1
+    # TODO: should we keep the items sorted?
     self.devs_menu.add(item)
+    item.title = f"{gamepad.manufacturer_string} {gamepad.product_string}"
 
   def remove_dev_menu_item(self, gamepad):
-    name = self.get_gamepad_name(gamepad)
-    debug("Removing menu item '%s'", name)
-    self.devs_menu.pop(name)
+    key = self.get_gamepad_key(gamepad)
+    debug("Removing menu item '%s'", key)
+    self.devs_menu.pop(key)
 
-  def get_gamepad_name(self, gamepad):
+  def get_gamepad_key(self, gamepad):
     return f"{gamepad.vendor_id:04x}:{gamepad.product_id:04x}"
-
-  def dev_clicked(self, item):
-    item.state = 0 if item.state == 1 else 1
 
   @rumps.clicked('Quit')
   def clean_up_before_quit(self, _):
