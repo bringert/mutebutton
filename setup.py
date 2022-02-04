@@ -8,7 +8,7 @@ Usage:
 from setuptools import setup
 
 APP = ['Tyst.py']
-DATA_FILES = ['microsoft-teams-mute.scpt']
+DATA_FILES = ['microsoft-teams-mute.applescript']
 OPTIONS = {
     'iconfile':'icon.icns',
     'plist': {
