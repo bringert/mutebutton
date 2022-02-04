@@ -1,3 +1,5 @@
+* Reduce applescript latency first time it runs
+
 * Improve device menu: persist device state, sort menu items alphabetically
 
 * Run on Mac start-up, with a menu item to enable/disable
