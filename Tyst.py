@@ -61,12 +61,20 @@ class MuteButtonApp(rumps.App):
 
   @rumps.clicked('Teams: Mute')
   def teams_mute(self, _):
-    actions.ms_teams_mute()
+    self.ms_teams_mute()
 
   def button_handler(self, button):
     if button == BUTTON_MUTE:
       debug(f"Button {button} pressed")
+      AppHelper.callAfter(self.ms_teams_mute)
+
+  def ms_teams_mute(self):
+    debug("Muting Teams")
+    try:
       actions.ms_teams_mute()
+    except Exception as err:
+      logging.exception("Failed to mute Microsoft Teams")
+      rumps.alert(title="Error", message=str(err))
 
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG,format="%(levelname)s:%(threadName)s:%(message)s")
