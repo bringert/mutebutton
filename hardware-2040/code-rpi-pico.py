@@ -28,4 +28,4 @@ while True:
     else:
         gp.release_buttons(gamepad_button_num)
         led.value = False
-    time.sleep(0.1)
+    time.sleep(0.01)
