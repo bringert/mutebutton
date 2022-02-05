@@ -1,5 +1,6 @@
 Simple USB HID gamepad device that uses a single momentary pushbutton
 
+
 # Raspberry Pi Pico version
 
 ## Hardware
@@ -10,19 +11,29 @@ Simple USB HID gamepad device that uses a single momentary pushbutton
 
 ## Installation
 
-* Install CircuityPython, see
-  https://learn.adafruit.com/getting-started-with-raspberry-pi-pico-circuitpython/circuitpython
+* Download CircuityPython from https://circuitpython.org/board/raspberry_pi_pico/
+
+* Copy .uf2 file to /Volumes/RPI-RP2
 
 * Copy code to Raspberry Pi Pico:
 
-  ```
-  cp boot.py hid_gamepad.py /Volumes/CIRCUITPY/
-  cp code-rpi-pico.py /Volumes/CIRCUITPY/code.py
-  ```
+```
+cp boot.py hid_gamepad.py /Volumes/CIRCUITPY/
+cp code-rpi-pico.py /Volumes/CIRCUITPY/code.py
+```
 
 * Reset device to pick up new boot.py
 
+
 # Pimoroni Tiny 2040 version
+
+## Hardware
+
+* Pimoroni Tiny 2040, https://shop.pimoroni.com/products/tiny-2040
+
+* Momentary pushbutton connected between +3.3V and GP4
+
+## Installation
 
 * Download CircuitPython from https://circuitpython.org/board/pimoroni_tiny2040/
 
