@@ -31,6 +31,12 @@ pip3 install -U hidapi --user
 pip3 install -U rumps --user
 ```
 
+* Install the Quartz framework bindings to inject keypresses
+
+```
+pip3 install -U pyobjc-framework-Quartz --user
+```
+
 * Install py-applescript to run the automation script
 
 ```

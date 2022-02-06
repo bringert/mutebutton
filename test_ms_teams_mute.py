@@ -1,5 +1,3 @@
-import actions
-
 import time
 
 def time_function(f):
@@ -20,6 +18,16 @@ def benchmark_function(f):
   total_time_ms = sum([time_function(f) for i in range(0, num_runs)])
   print(f"Average {total_time_ms/num_runs} ms")
 
-if __name__ == '__main__':
-  print("Benchmarking ms_teams_mute...")
+def benchmark_applescript():
+  import actions
+  print("Benchmarking actions.ms_teams_mute...")
   benchmark_function(actions.ms_teams_mute)
+
+def benchmark_fast():
+  import actions_fast
+  print("Benchmarking actions_fast.ms_teams_mute...")
+  benchmark_function(actions_fast.ms_teams_mute)
+
+if __name__ == '__main__':
+  benchmark_fast()
+#  benchmark_applescript()

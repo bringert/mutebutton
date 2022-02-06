@@ -1,4 +1,4 @@
-import actions
+import actions_fast as actions
 import gamepad
 
 import logging
