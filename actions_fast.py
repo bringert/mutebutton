@@ -1,3 +1,6 @@
+# Toggles microphone mute in Microsoft Teams by sending Cmd-Shift-M to the
+# Teams process using Quartz Event Services.
+
 from AppKit import NSRunningApplication, NSWorkspace
 from Foundation import NSAppleEventDescriptor
 from Quartz import CGEventCreateKeyboardEvent, CGEventSetFlags, CGEventPostToPid, kCGEventFlagMaskShift, kCGEventFlagMaskCommand
