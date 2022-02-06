@@ -84,6 +84,4 @@ open dist/Tyst.app
 dist/Tyst.app/Contents/MacOS/Tyst
 ```
 
-* Enable "System Events" access for Tyst
-
 * Allow Accessibility access for Tyst
