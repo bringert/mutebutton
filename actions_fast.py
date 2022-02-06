@@ -51,5 +51,10 @@ def sendKeystrokeToApp(appBundleID, keyCode, modifiers):
 def ms_teams_mute():
   sendShiftCommandM()
 
+def isTrusted():
+  from ApplicationServices import AXIsProcessTrusted
+  return AXIsProcessTrusted()
+
 if __name__ == '__main__':
+  print("Trusted:", isTrusted())
   ms_teams_mute()

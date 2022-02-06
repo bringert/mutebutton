@@ -1,6 +1,9 @@
 * Check on start-up that we have the necessary privacy settings enabled.
   Can probably use this for Accessibility:
   https://developer.apple.com/documentation/applicationservices/1460720-axisprocesstrusted?language=objc
+  or
+  https://developer.apple.com/documentation/applicationservices/1459186-axisprocesstrustedwithoptions?language=objc
+  Made a start in actions_fast.isTrusted()
 
 * Report error message if actions_fast is unable to inject keypresses
 
