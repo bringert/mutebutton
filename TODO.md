@@ -1,15 +1,3 @@
-* Reduce applescript latency first time it runs
-  Maybe use pyobjc-framework-ScriptingBridge, bundle id com.microsoft.teams
-  Or maybe send raw Apple Events using NSAppleEventDescriptor,
-  like https://github.com/pyatom/pyatom/blob/master/atomac/AXClasses.py
-  does with keypresses. To print Apple Events, from
-  https://stackoverflow.com/questions/53638803/translate-into-apple-events-applescript
-
-```
-export AEDebugSends=1
-osascript microsoft-teams-mute.applescript
-```
-
 * Improve device menu: persist device state, sort menu items alphabetically
 
 * Run on Mac start-up, with a menu item to enable/disable
