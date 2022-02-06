@@ -1,3 +1,9 @@
+* Check on start-up that we have the necessary privacy settings enabled.
+  Can probably use this for Accessibility:
+  https://developer.apple.com/documentation/applicationservices/1460720-axisprocesstrusted?language=objc
+
+* Report error message if actions_fast is unable to inject keypresses
+
 * Improve device menu: persist device state, sort menu items alphabetically
 
 * Run on Mac start-up, with a menu item to enable/disable

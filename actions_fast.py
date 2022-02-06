@@ -39,6 +39,8 @@ def sendKeystrokeToApp(appBundleID, keyCode, modifiers):
   keyUp = CGEventCreateKeyboardEvent(None, keyCode, False)
   CGEventSetFlags(keyUp, modifiers)
 
+  # TODO: this doesn't seem to fail or print any error message if we don't
+  # have the necessary privacy permission
   CGEventPostToPid(pid, keyDown)
   CGEventPostToPid(pid, keyUp)
   # We could also use CGEventPost to send it to the foreground app,
