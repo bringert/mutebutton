@@ -3,7 +3,7 @@ import actions_fast as actions
 import gamepad
 
 import logging
-from logging import debug, warn
+from logging import debug, warning
 from PyObjCTools import AppHelper
 import rumps
 
@@ -78,13 +78,15 @@ class MuteButtonApp(rumps.App):
       rumps.alert(title="Error", message=str(err))
 
   def start(self):
+    logging.critical("Tyst starting")
     trusted = accessibility.isTrustedWithPrompt()
     if not trusted:
-      warn("Accessibility control is not enabled for the app")
+      warning("Accessibility control is not enabled for the app")
     self.run()
 
 if __name__ == '__main__':
-  logging.basicConfig(level=logging.DEBUG,format="%(levelname)s:%(threadName)s:%(message)s")
+  logHandlers = [logging.StreamHandler()]
+  logging.basicConfig(level=logging.DEBUG,format="%(levelname)s:%(threadName)s:%(message)s", handlers=logHandlers)
   rumps.debug_mode(True)
   app = MuteButtonApp()
   app.start()
