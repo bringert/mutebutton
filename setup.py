@@ -12,7 +12,10 @@ DATA_FILES = ['microsoft-teams-mute.applescript']
 OPTIONS = {
     'iconfile':'icon.icns',
     'plist': {
+        'CFBundleIdentifier': 'net.bringert.tyst',
+        'CFBundleShortVersion': '0.1.0',
         'CFBundleShortVersionString': '0.1.0',
+        'CFBundleVersion': '0.1.0',
         'LSUIElement': True,
     },
 }
