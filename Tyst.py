@@ -1,8 +1,9 @@
+import accessibility
 import actions_fast as actions
 import gamepad
 
 import logging
-from logging import debug
+from logging import debug, warn
 from PyObjCTools import AppHelper
 import rumps
 
@@ -76,8 +77,14 @@ class MuteButtonApp(rumps.App):
       logging.exception("Failed to mute Microsoft Teams")
       rumps.alert(title="Error", message=str(err))
 
+  def start(self):
+    trusted = accessibility.isTrustedWithPrompt()
+    if not trusted:
+      warn("Accessibility control is not enabled for the app")
+    self.run()
+
 if __name__ == '__main__':
   logging.basicConfig(level=logging.DEBUG,format="%(levelname)s:%(threadName)s:%(message)s")
   rumps.debug_mode(True)
   app = MuteButtonApp()
-  app.run()
+  app.start()

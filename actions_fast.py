@@ -1,9 +1,10 @@
 # Toggles microphone mute in Microsoft Teams by sending Cmd-Shift-M to the
 # Teams process using Quartz Event Services.
+import accessibility
 
 from AppKit import NSRunningApplication, NSWorkspace
-from Foundation import NSAppleEventDescriptor
 from Quartz import CGEventCreateKeyboardEvent, CGEventSetFlags, CGEventPostToPid, kCGEventFlagMaskShift, kCGEventFlagMaskCommand
+from logging import warn
 
 # To bring Teams to the foreground, we can use
 # tell application "Microsoft Teams"
@@ -49,12 +50,10 @@ def sendKeystrokeToApp(appBundleID, keyCode, modifiers):
   #Quartz.CGEventPost(Quartz.kCGHIDEventTap, keyUp)
 
 def ms_teams_mute():
+  if not accessibility.isTrustedWithPrompt():
+    warn("Accessibility is not enabled")
+    return
   sendShiftCommandM()
 
-def isTrusted():
-  from ApplicationServices import AXIsProcessTrusted
-  return AXIsProcessTrusted()
-
 if __name__ == '__main__':
-  print("Trusted:", isTrusted())
   ms_teams_mute()
