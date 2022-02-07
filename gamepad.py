@@ -2,7 +2,7 @@ import hotplug
 
 import hid
 import logging
-from logging import debug, warn
+from logging import debug, warning
 import threading
 import time
 
@@ -74,7 +74,7 @@ class Gamepad:
   def open(self):
     debug("Gamepad.open()")
     if self.running:
-      warn("Gamepad already open")
+      warning("Gamepad already open")
       return
     self.running = True
     thread_name = f"{self.vendor_id:04x}:{self.product_id:04x}"

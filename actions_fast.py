@@ -4,7 +4,7 @@ import accessibility
 
 from AppKit import NSRunningApplication, NSWorkspace
 from Quartz import CGEventCreateKeyboardEvent, CGEventSetFlags, CGEventPostToPid, kCGEventFlagMaskShift, kCGEventFlagMaskCommand
-from logging import warn
+from logging import warning
 
 # To bring Teams to the foreground, we can use
 # tell application "Microsoft Teams"
@@ -51,7 +51,7 @@ def sendKeystrokeToApp(appBundleID, keyCode, modifiers):
 
 def ms_teams_mute():
   if not accessibility.isTrustedWithPrompt():
-    warn("Accessibility is not enabled")
+    warning("Accessibility is not enabled")
     return
   sendShiftCommandM()
 
