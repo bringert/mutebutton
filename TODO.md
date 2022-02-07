@@ -1,11 +1,6 @@
-* Check on start-up that we have the necessary privacy settings enabled.
-  Can probably use this for Accessibility:
-  https://developer.apple.com/documentation/applicationservices/1460720-axisprocesstrusted?language=objc
-  or
-  https://developer.apple.com/documentation/applicationservices/1459186-axisprocesstrustedwithoptions?language=objc
-  Made a start in actions_fast.isTrusted()
+* Figure out how to see logs (Console.app?) when running through LaunchServices
 
-* Report error message if actions_fast is unable to inject keypresses
+* Fix app lockup on start-up exceptions when running through LaunchServices
 
 * Improve device menu: persist device state, sort menu items alphabetically
 
