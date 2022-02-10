@@ -2,6 +2,9 @@
 
 * Fix app lockup on start-up exceptions when running through LaunchServices
 
+* Add support for more buttons: toggle camera (Command+Shift+O), raise / lower (Command+Shift+K)
+  https://support.microsoft.com/en-us/office/keyboard-shortcuts-for-microsoft-teams-2e8e2a70-e8d8-4a19-949b-4c36dd5292d2
+
 * Improve device menu: persist device state, sort menu items alphabetically
 
 * Run on Mac start-up, with a menu item to enable/disable
