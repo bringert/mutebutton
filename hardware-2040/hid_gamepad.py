@@ -33,7 +33,7 @@ def find_device(
 
 class Gamepad:
     """Emulate a generic gamepad controller with 16 buttons,
-    numbered 1-16, and two joysticks, one controlling
+    numbered 0-15, and two joysticks, one controlling
     ``x` and ``y`` values, and the other controlling ``z`` and
     ``r_z`` (z rotation or ``Rz``) values.
 
@@ -50,10 +50,9 @@ class Gamepad:
         """
         self._gamepad_device = find_device(devices, usage_page=0x1, usage=0x05)
 
-        # Reuse this bytearray to send mouse reports.
-        # Typically controllers start numbering buttons at 1 rather than 0.
-        # report[0] buttons 1-8 (LSB is button 1)
-        # report[1] buttons 9-16
+        # Reuse this bytearray to send gamepad reports.
+        # report[0] buttons 0-7 (LSB is button 0)
+        # report[1] buttons 8-15
         # report[2] joystick 0 x: -127 to 127
         # report[3] joystick 0 y: -127 to 127
         # report[4] joystick 1 x: -127 to 127
@@ -102,9 +101,9 @@ class Gamepad:
 
     def _set_button(self, button, value):
         if value:
-            self._buttons_state |= 1 << self._validate_button_number(button) - 1
+            self._buttons_state |= 1 << self._validate_button_number(button)
         else:
-            self._buttons_state &= ~(1 << self._validate_button_number(button) - 1)
+            self._buttons_state &= ~(1 << self._validate_button_number(button))
 
     def release_all_buttons(self):
         """Release all the buttons."""
@@ -176,8 +175,8 @@ class Gamepad:
 
     @staticmethod
     def _validate_button_number(button):
-        if not 1 <= button <= NUM_BUTTONS:
-            raise ValueError(f"Button number must in range 1 to {NUM_BUTTONS}")
+        if not 0 <= button < NUM_BUTTONS:
+            raise ValueError(f"Button number must in range 0 to {NUM_BUTTONS-1}")
         return button
 
     @staticmethod

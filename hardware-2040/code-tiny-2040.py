@@ -8,7 +8,7 @@ import hid_gamepad
 
 gp = hid_gamepad.Gamepad(usb_hid.devices)
 
-gamepad_button_num = 2
+gamepad_button_num = 1
 
 button_pin = board.GP4
 
@@ -37,4 +37,3 @@ while True:
         gp.release_buttons(gamepad_button_num)
         led_rgb(0, 0, 0)
     time.sleep(0.01)
-

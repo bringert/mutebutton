@@ -15,7 +15,7 @@ def neokey_button(pin):
     button.pull = digitalio.Pull.DOWN
     return button
 
-buttons = {2:neokey_button(board.GP12), 3:neokey_button(board.GP11)}
+buttons = {1:neokey_button(board.GP12), 2:neokey_button(board.GP11)}
 
 neopixel_pin = board.GP10
 
