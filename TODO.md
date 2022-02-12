@@ -2,6 +2,9 @@
 
 * Fix app lockup on start-up exceptions when running through LaunchServices
 
+* Handle having two devices with the same vendorID:productID at the same time
+  gracefully
+
 * Add support for more buttons: toggle camera (Command+Shift+O), raise / lower (Command+Shift+K)
   https://support.microsoft.com/en-us/office/keyboard-shortcuts-for-microsoft-teams-2e8e2a70-e8d8-4a19-949b-4c36dd5292d2
 
