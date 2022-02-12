@@ -93,15 +93,15 @@ class Gamepad:
         self._send()
 
     def set_buttons(self, button_values):
-        """Set the state of the buttons, starting from the first button."""
-        if len(button_values) >= NUM_BUTTONS:
-            raise ValueError("Too many buttons")
+        """Set the state of the buttons. button_values is a dictionary
+        mapping button numbers to their value.
+        """
         new_buttons_state = self._buttons_state
-        for i in range(0, len(button_values)):
-            if button_values[i]:
-              new_buttons_state |= 1 << i
+        for button in button_values.keys():
+            if button_values[button]:
+              new_buttons_state |= 1 << self._validate_button_number(button) - 1
             else:
-              new_buttons_state &= ~(1 << i)
+              new_buttons_state &= ~(1 << self._validate_button_number(button) - 1)
         if new_buttons_state != self._buttons_state:
           self._buttons_state = new_buttons_state
           self._send()

@@ -65,8 +65,8 @@ class MuteButtonApp(rumps.App):
     self.ms_teams_mute()
 
   def button_handler(self, button):
+    debug(f"Button {button} pressed")
     if button == BUTTON_MUTE:
-      debug(f"Button {button} pressed")
       AppHelper.callAfter(self.ms_teams_mute)
 
   def ms_teams_mute(self):

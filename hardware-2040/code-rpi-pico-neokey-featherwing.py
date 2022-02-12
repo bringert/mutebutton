@@ -15,7 +15,7 @@ def neokey_button(pin):
     button.pull = digitalio.Pull.DOWN
     return button
 
-buttons = [neokey_button(board.GP12), neokey_button(board.GP11)]
+buttons = {2:neokey_button(board.GP12), 3:neokey_button(board.GP11)}
 
 neopixel_pin = board.GP10
 
@@ -28,10 +28,10 @@ num_pixels = 2
 
 print("Started")
 
-buttons_values = [False] * len(buttons)
+buttons_values = {}
 
 while True:
-    new_buttons_values = [b.value for b in buttons]
+    new_buttons_values = {i: b.value for i,b in buttons.items()}
     gp.set_buttons(new_buttons_values)
     if new_buttons_values != buttons_values:
       buttons_values = new_buttons_values
