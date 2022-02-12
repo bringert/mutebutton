@@ -12,6 +12,7 @@
 import struct
 import time
 
+NUM_BUTTONS = 16
 
 def find_device(
     devices: Sequence[usb_hid.Device], *, usage_page: int, usage: int
@@ -91,6 +92,20 @@ class Gamepad:
             self._buttons_state &= ~(1 << self._validate_button_number(button) - 1)
         self._send()
 
+    def set_buttons(self, button_values):
+        """Set the state of the buttons, starting from the first button."""
+        if len(button_values) >= NUM_BUTTONS:
+            raise ValueError("Too many buttons")
+        new_buttons_state = self._buttons_state
+        for i in range(0, len(button_values)):
+            if button_values[i]:
+              new_buttons_state |= 1 << i
+            else:
+              new_buttons_state &= ~(1 << i)
+        if new_buttons_state != self._buttons_state:
+          self._buttons_state = new_buttons_state
+          self._send()
+
     def release_all_buttons(self):
         """Release all the buttons."""
 
@@ -161,8 +176,8 @@ class Gamepad:
 
     @staticmethod
     def _validate_button_number(button):
-        if not 1 <= button <= 16:
-            raise ValueError("Button number must in range 1 to 16")
+        if not 1 <= button <= NUM_BUTTONS:
+            raise ValueError(f"Button number must in range 1 to {NUM_BUTTONS}")
         return button
 
     @staticmethod
