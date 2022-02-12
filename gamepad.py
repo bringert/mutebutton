@@ -19,6 +19,9 @@ class GamepadManager:
     self.devmgr.start()
 
   def close(self):
+    for gamepad in self.devices.values():
+      gamepad.close()
+    self.devices = {}
     self.devmgr.close()
 
   def is_gamepad(self, vendor_id, product_id):
