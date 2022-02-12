@@ -83,28 +83,28 @@ class Gamepad:
     def press_buttons(self, *buttons):
         """Press and hold the given buttons."""
         for button in buttons:
-            self._buttons_state |= 1 << self._validate_button_number(button) - 1
+            self._set_button(button, True)
         self._send()
 
     def release_buttons(self, *buttons):
         """Release the given buttons."""
         for button in buttons:
-            self._buttons_state &= ~(1 << self._validate_button_number(button) - 1)
+            self._set_button(button, False)
         self._send()
 
     def set_buttons(self, button_values):
         """Set the state of the buttons. button_values is a dictionary
         mapping button numbers to their value.
         """
-        new_buttons_state = self._buttons_state
         for button in button_values.keys():
-            if button_values[button]:
-              new_buttons_state |= 1 << self._validate_button_number(button) - 1
-            else:
-              new_buttons_state &= ~(1 << self._validate_button_number(button) - 1)
-        if new_buttons_state != self._buttons_state:
-          self._buttons_state = new_buttons_state
-          self._send()
+            self._set_button(button, button_values[button])
+        self._send()
+
+    def _set_button(self, button, value):
+        if value:
+            self._buttons_state |= 1 << self._validate_button_number(button) - 1
+        else:
+            self._buttons_state &= ~(1 << self._validate_button_number(button) - 1)
 
     def release_all_buttons(self):
         """Release all the buttons."""
