@@ -8,6 +8,7 @@ from PyObjCTools import AppHelper
 import rumps
 
 BUTTON_MUTE = 1
+BUTTON_VIDEO = 2
 
 class MuteButtonApp(rumps.App):
   def __init__(self):
@@ -68,6 +69,8 @@ class MuteButtonApp(rumps.App):
     debug(f"Button {button} pressed")
     if button == BUTTON_MUTE:
       AppHelper.callAfter(self.ms_teams_mute)
+    elif button == BUTTON_VIDEO:
+      AppHelper.callAfter(self.ms_teams_video)
 
   def ms_teams_mute(self):
     debug("Muting Teams")
@@ -75,6 +78,14 @@ class MuteButtonApp(rumps.App):
       actions.ms_teams_mute()
     except Exception as err:
       logging.exception("Failed to mute Microsoft Teams")
+      rumps.alert(title="Error", message=str(err))
+
+  def ms_teams_video(self):
+    debug("Toggling Teams video")
+    try:
+      actions.ms_teams_video()
+    except Exception as err:
+      logging.exception("Failed to toggle Microsoft Teams video")
       rumps.alert(title="Error", message=str(err))
 
   def start(self):

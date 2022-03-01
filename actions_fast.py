@@ -20,8 +20,16 @@ from logging import warning
 def sendShiftCommandM():
   keyCodeM = 46
   cmdShift = kCGEventFlagMaskShift | kCGEventFlagMaskCommand
+  sendKeystrokeToTeams(keyCodeM, cmdShift)
+
+def sendShiftCommandO():
+  keyCodeO = 31
+  cmdShift = kCGEventFlagMaskShift | kCGEventFlagMaskCommand
+  sendKeystrokeToTeams(keyCodeO, cmdShift)
+
+def sendKeystrokeToTeams(keyCode, flagMask):
   teamsBundleID = 'com.microsoft.teams'
-  sendKeystrokeToApp(teamsBundleID, keyCodeM, cmdShift)
+  sendKeystrokeToApp(teamsBundleID, keyCode, flagMask)
 
 def getAppPid(bundleID):
   for app in NSWorkspace.sharedWorkspace().runningApplications():
@@ -30,6 +38,10 @@ def getAppPid(bundleID):
   return None
 
 def sendKeystrokeToApp(appBundleID, keyCode, modifiers):
+  if not accessibility.isTrustedWithPrompt():
+    warning("Accessibility is not enabled")
+    return
+
   pid = getAppPid(appBundleID)
   if not pid:
     # App is not running
@@ -50,10 +62,10 @@ def sendKeystrokeToApp(appBundleID, keyCode, modifiers):
   #Quartz.CGEventPost(Quartz.kCGHIDEventTap, keyUp)
 
 def ms_teams_mute():
-  if not accessibility.isTrustedWithPrompt():
-    warning("Accessibility is not enabled")
-    return
   sendShiftCommandM()
+
+def ms_teams_video():
+  sendShiftCommandO()
 
 if __name__ == '__main__':
   ms_teams_mute()
